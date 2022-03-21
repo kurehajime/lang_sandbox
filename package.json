@@ -1,0 +1,10 @@
+{
+  "name": "lang_sandbox",
+  "version": "1.0.0",
+  "scripts": {
+    "up": "npx http-server -o / -c-1"
+  },
+  "dependencies": {
+    "http-server": "^14.1.0"
+  }
+}
