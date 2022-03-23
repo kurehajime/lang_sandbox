@@ -9,10 +9,11 @@ Expression
     }
 
 Term
-  = head:Factor tail:(_ ("*" / "/") _ Factor)* {
+  = head:Factor tail:(_ ("*" / "/" / "❤️") _ Factor)* {
       return tail.reduce(function(result, element) {
         if (element[1] === "*") { return result * element[3]; }
         if (element[1] === "/") { return result / element[3]; }
+        if (element[1] === "❤️") { return (result + element[3])/2; }
       }, head);
     }
 
