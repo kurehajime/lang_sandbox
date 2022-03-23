@@ -1,8 +1,11 @@
 export class Evaluter {
+
+    //与えられた構文木を解釈
     evalute(env, tree) {
         if (tree == undefined || tree.type == undefined) {
             return tree
         }
+        // ノードのタイプ
         const type = tree.type
 
         switch (type) {
