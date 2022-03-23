@@ -28,11 +28,13 @@ export class Evaluter {
         }
     }
 
+    // 変数
     // https://github.com/estree/estree/blob/master/es5.md#identifier
     Identifier(env, name) {
         return name
     }
 
+    // プログラム
     // https://github.com/estree/estree/blob/master/es5.md#programs
     Program(env, body) {
         for (const item of body) {
@@ -40,24 +42,28 @@ export class Evaluter {
         }
     }
 
+    // リテラル(数字とか文字とか)
     // https://github.com/estree/estree/blob/master/es5.md#literal
     Literal(env, value) {
         return value;
     }
 
+    // 式
     // https://github.com/estree/estree/blob/master/es5.md#expressionstatement
     ExpressionStatement(env, expression) {
         return this.evalute(env, expression)
     }
 
+    // ブロック
     // https://github.com/estree/estree/blob/master/es5.md#blockstatement
     BlockStatement(env, body) {
         return this.Program(env, body)
     }
 
+    // if文
     // https://github.com/estree/estree/blob/master/es5.md#ifstatement
     IfStatement(env, test, consequent, alternate) {
-        let result = this.evalute(env, test)
+        const result = this.evalute(env, test)
         if (result) {
             this.evalute(env, consequent)
         } else if (alternate) {
@@ -65,19 +71,21 @@ export class Evaluter {
         }
     }
 
+    // メソッド呼び出し
     // https://github.com/estree/estree/blob/master/es5.md#callexpression
     CallExpression(env, callee, _arguments) {
-        let args = _arguments.map((x) => {
+        const args = _arguments.map((x) => {
             return this.evalute(env, x)
         })
         env.native_functions[callee.name](args[0])
     }
 
+    // 右辺と左辺がある演算子
     // https://github.com/estree/estree/blob/master/es5.md#binaryexpression
     BinaryExpression(env, operator, left, right) {
-        let op = operator
-        let l = this.evalute(env, left)
-        let r = this.evalute(env, right)
+        const op = operator
+        const l = this.evalute(env, left)
+        const r = this.evalute(env, right)
 
         switch (op) {
             case "==":
