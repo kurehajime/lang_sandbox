@@ -1,3 +1,5 @@
+// original https://github.com/peggyjs/peggy/blob/main/examples/arithmetics.pegjs
+
 export default `
 
 Expression
@@ -9,11 +11,11 @@ Expression
     }
 
 Term
-  = head:Factor tail:(_ ("*" / "/" / "❤️") _ Factor)* {
+  = head:Factor tail:(_ ("*" / "/" / "😊") _ Factor)* {
       return tail.reduce(function(result, element) {
         if (element[1] === "*") { return result * element[3]; }
         if (element[1] === "/") { return result / element[3]; }
-        if (element[1] === "❤️") { return (result + element[3])/2; }
+        if (element[1] === "😊") { return (result + element[3])/2; }
       }, head);
     }
 
