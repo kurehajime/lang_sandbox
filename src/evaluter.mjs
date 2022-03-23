@@ -25,8 +25,14 @@ export class Evaluter {
                 return this.CallExpression(env, tree.callee, tree.arguments)
             case "BinaryExpression":
                 return this.BinaryExpression(env, tree.operator, tree.left, tree.right)
+            case "AssignmentExpression":
+                return this.AssignmentExpression(env, tree.operator, tree.left, tree.right)
+            case "VariableDeclaration":
+                return this.VariableDeclaration(env, tree.declarations, tree.kind)
+            case "VariableDeclarator":
+                return this.VariableDeclarator(env, tree.id, tree.init)
             default:
-                console.log(JSON.stringify(tree))
+                console.log(JSON.stringify(tree, null, 2))
                 break;
         }
     }
@@ -34,7 +40,7 @@ export class Evaluter {
     // 変数
     // https://github.com/estree/estree/blob/master/es5.md#identifier
     Identifier(env, name) {
-        return name
+        return env.values[name]
     }
 
     // プログラム
@@ -78,6 +84,9 @@ export class Evaluter {
     // https://github.com/estree/estree/blob/master/es5.md#callexpression
     CallExpression(env, callee, _arguments) {
         const args = _arguments.map((x) => {
+            if (x.type === "Identifier") {
+                return env.values[x.name]
+            }
             return this.evalute(env, x)
         })
         env.native_functions[callee.name](args[0])
@@ -103,5 +112,41 @@ export class Evaluter {
             default:
                 break;
         }
+    }
+
+    // 代入式
+    // https://github.com/estree/estree/blob/master/es5.md#assignmentexpression 
+    AssignmentExpression(env, operator, left, right) {
+        return this.Assign(env, this.evalute(env, operator), left, this.evalute(env, right))
+    }
+    
+    // 代入
+    // https://github.com/estree/estree/blob/master/es5.md#assignmentoperator
+    Assign(env, operator, identifier, value) {
+        let op = this.evalute(env, operator)
+        let result = env.values[identifier.name]
+        switch (op) {
+            case "=":
+                result = value
+                break
+            default:
+                break;
+        }
+        env.values[identifier.name] = result
+        return env.values[identifier.name]
+    }
+
+    // 変数定義(複数)
+    // https://github.com/estree/estree/blob/master/es5.md#variabledeclaration
+    VariableDeclaration(env, declarations, kind) {
+        for (const item of declarations) {
+            this.evalute(env, item)
+        }
+    }
+    
+    // 変数定義
+    // https://github.com/estree/estree/blob/master/es5.md#variabledeclarator
+    VariableDeclarator(env, id, init) {
+        this.Assign(env, "=", id, this.evalute(env, init))
     }
 }

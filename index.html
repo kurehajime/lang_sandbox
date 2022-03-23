@@ -4,14 +4,19 @@
         <script type="module" src="./src/main.js" defer></script>
     </head>
     <body>
-        <textarea name="code" id="code" cols="40" rows="10">
-if(2 + 2 == 4){
+        ソース:<br>
+        <textarea name="code" id="code" cols="80" rows="10">
+var a = 4
+if(2 + 2 == a){
     print("Hello World😊")
 }else{
     print("Bye Worldh😜")
 }
         </textarea><br>
         <button id="run">Run</button><br>
-        <textarea name="result" id="result" cols="40" rows="10"></textarea>
+        結果:<br>
+        <textarea name="result" id="result" cols="80" rows="10"></textarea><br>
+        構文木:<br>
+        <textarea name="tree" id="tree" cols="80" rows="10"></textarea>
     </body>
 </html>
